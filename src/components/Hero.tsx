@@ -6,8 +6,6 @@ import { ease, Magnetic, socials, useClock, useCopyEmail } from './ui'
 
 type Line = { kind: 'cmd' | 'out'; text: string; tone?: 'ok' | 'accent' | 'dim' }
 
-const featured = projects.filter((p) => p.featured)
-
 const script: Line[] = [
   { kind: 'cmd', text: 'whoami' },
   { kind: 'out', text: 'priyanshu singh · full-stack & mobile developer' },
@@ -74,7 +72,7 @@ function Terminal() {
         )}
       </div>
       <p className="sr-only">
-        {profile.name}, full-stack and mobile developer. Recently shipped {featured.map((p) => p.name).join(' and ')}. Open to
+        {profile.name}, full-stack and mobile developer. Projects include {projects.map((p) => p.name).join(', ')}. Open to
         internships and full-time roles.
       </p>
     </div>
@@ -161,17 +159,9 @@ export default function Hero() {
           </h1>
 
           <motion.p {...up(0.35)} className="mt-7 max-w-xl text-lg leading-relaxed text-muted">
-            I’m <span className="text-fg">Priyanshu Singh</span>. I design, build and ship complete products, from Postgres schemas and
-            typed APIs to polished React and React Native interfaces. Most recently{' '}
-            {featured.map((p, i) => (
-              <span key={p.name}>
-                <a href={p.live} target="_blank" rel="noopener" className="text-fg underline decoration-line-strong underline-offset-4 hover:decoration-accent-ink">
-                  {p.name}
-                </a>
-                {i < featured.length - 1 ? ' and ' : ''}
-              </span>
-            ))}
-            , both live on web, Android and iOS.
+            I’m <span className="text-fg">Priyanshu Singh</span>. I build complete products end to end, from real-time chat and
+            AI-powered assistants to marketplaces and cross-platform mobile apps, using TypeScript, React, Node.js and the databases
+            behind them.
           </motion.p>
 
           <motion.div {...up(0.45)} className="mt-9 flex flex-wrap items-center gap-3">
