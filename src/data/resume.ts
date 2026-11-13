@@ -44,7 +44,7 @@ export type Project = {
 export const projects: Project[] = [
   {
     name: 'PaiPai',
-    tagline: 'Personal finance, built for India',
+    tagline: 'Expense tracking, made for India',
     image: '/projects/paipai.webp',
     live: 'https://paipai.priyanshusingh.co.in',
     source: 'https://github.com/priyanshuBS/paipai',
@@ -53,7 +53,7 @@ export const projects: Project[] = [
     platforms: ['Web', 'Android', 'iOS'],
     color: '#f97316',
     description:
-      'Log an expense in two taps, see exactly where your money goes and stay inside your budgets. A Next.js website and an Expo app share one typed Hono API.',
+      'A calm, fast ledger for everyday spending in rupees. Log an expense in two taps, see where your money goes and stay inside your budgets. A Next.js website and an Expo app for Android and iOS share one typed Hono API.',
     highlights: [
       'Turborepo monorepo: Next.js web, Expo mobile and Hono API with shared Zod schemas',
       'Budgets with alerts, recurring rules, deep analytics, CSV and PDF statements',
@@ -73,60 +73,60 @@ export const projects: Project[] = [
     platforms: ['Web', 'Android', 'iOS'],
     color: '#6366f1',
     description:
-      'Fresh five-question drops twice a day in English, Reasoning, Puzzles and CS, plus a short daily read. One Expo codebase ships to Android, iOS and the web.',
+      'Short daily quizzes in English, Reasoning, Puzzles and Computer Science, with a clear explanation after every answer and a short article each morning. Fresh content arrives twice a day without an app update, and one Expo codebase ships to Android, iOS and the web.',
     highlights: [
-      'AI content pipeline on GitHub Actions: Groq writes, a second pass fact-checks',
+      'AI content pipeline on GitHub Actions: Groq writes each drop, a second pass fact-checks it',
       'Every drop is schema-validated and de-duplicated before it is ever served',
-      'Passwordless email-code auth with hashed tokens and rate limits',
-      'Offline-first with delta progress sync, plus streaks, levels and badges',
+      'Passwordless email-code sign-in with hashed tokens and rate limits',
+      'Works offline with delta progress sync, plus streaks, levels and badges',
     ],
     tags: ['Expo', 'React Native', 'Expo Router', 'Neon Postgres', 'Groq', 'Zod'],
   },
   {
     name: 'ExplainThis',
-    tagline: 'Chat with your documents',
+    tagline: 'Ask your PDFs anything',
     image: '/projects/explainthis.webp',
     live: 'https://explainthisai.priyanshusingh.co.in',
     source: 'https://github.com/priyanshuBS/ExplainThisAI',
-    year: '2025',
+    year: '2026',
     color: '#22d3ee',
     description:
-      'A RAG pipeline that answers questions from uploaded PDFs, using Pinecone for semantic search and Redis for conversational memory.',
-    tags: ['RAG', 'Pinecone', 'Redis'],
+      'Upload PDFs and ask questions in plain language. A retrieval pipeline parses and chunks each file, stores its embeddings in Pinecone, and answers from the most relevant passages with a Groq-hosted LLM, with every conversation saved in PostgreSQL.',
+    tags: ['RAG', 'Pinecone', 'Groq', 'Prisma', 'PostgreSQL'],
   },
   {
     name: 'GeoChat',
-    tagline: 'Location-based real-time chat',
+    tagline: 'Real-time chat with people near you',
     image: '/projects/geochat.webp',
     live: 'https://geochat.pishu.in',
     source: 'https://github.com/dumbpishu/GeoChat',
-    year: '2025',
+    year: '2026',
     color: '#a78bfa',
     description:
-      'Chat instantly with people nearby, with OTP and JWT auth, media sharing, reactions and persistent history.',
-    tags: ['Node.js', 'WebSockets', 'JWT'],
+      'Opens a live chat room with everyone in your area, grouped by geohash and switching automatically as you move. Socket.IO with a Redis adapter delivers messages, typing indicators, reactions, mentions and image sharing instantly, behind email OTP sign-in.',
+    tags: ['Socket.IO', 'Redis', 'MongoDB', 'React', 'Zustand'],
   },
   {
     name: 'BazaarX',
-    tagline: 'Online marketplace',
+    tagline: 'A marketplace to buy and sell anything',
     image: '/projects/bazaarx.webp',
     live: 'https://bazaar-x.vercel.app',
     source: 'https://github.com/dumbpishu/BazaarX',
-    year: '2024',
+    year: '2025',
     color: '#34d399',
     description:
-      'List, search and buy products, with authentication, real-time buyer–seller chat and integrated payments.',
-    tags: ['React', 'Express', 'Payments'],
+      'List products with photos, browse by category, search, and check out from a cart with Razorpay payments verified on the server. Buyers and sellers chat in real time, sellers manage listings from a dashboard, and sign-in works with email or Google.',
+    tags: ['React', 'Express', 'MongoDB', 'Socket.IO', 'Razorpay'],
   },
 ]
 
 export const skills = [
   { group: 'Languages', items: ['TypeScript', 'JavaScript', 'Java', 'Python', 'SQL'] },
-  { group: 'Frontend', items: ['React', 'Next.js', 'Tailwind CSS', 'Motion', 'Recharts'] },
+  { group: 'Frontend', items: ['React', 'Next.js', 'Tailwind CSS', 'Redux Toolkit', 'Zustand', 'TanStack Query'] },
   { group: 'Mobile', items: ['React Native', 'Expo', 'Expo Router', 'NativeWind', 'Reanimated'] },
-  { group: 'Backend', items: ['Node.js', 'Express', 'Hono', 'WebSockets', 'REST APIs', 'Better Auth'] },
-  { group: 'Data', items: ['PostgreSQL', 'Drizzle ORM', 'MongoDB', 'Redis', 'Pinecone', 'Zod'] },
-  { group: 'AI & DevOps', items: ['RAG', 'LLM pipelines', 'GitHub Actions', 'Docker', 'Vercel', 'Jest'] },
+  { group: 'Backend', items: ['Node.js', 'Express', 'Hono', 'Socket.IO', 'REST APIs', 'JWT & OAuth'] },
+  { group: 'Data', items: ['PostgreSQL', 'MongoDB', 'Redis', 'Prisma', 'Drizzle', 'Pinecone'] },
+  { group: 'AI & DevOps', items: ['RAG', 'LLM APIs', 'GitHub Actions', 'Docker', 'Vercel', 'Jest'] },
 ]
 
 export const education = [

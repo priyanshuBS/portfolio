@@ -9,7 +9,7 @@ export default function Skills() {
     <section id="stack" aria-label="Tech stack" className="relative py-20 sm:py-28">
       <div className="container-x">
         <SectionHead index="03" label="Stack" title={['A toolkit for', <span className="serif text-accent-ink">every layer.</span>]}>
-          The tools I reach for to take an idea from schema to App Store.
+          The tools I reach for to take an idea from first sketch to production.
         </SectionHead>
 
         <div className="mt-14 grid gap-4 sm:mt-20 sm:grid-cols-2 lg:grid-cols-3">
