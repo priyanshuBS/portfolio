@@ -23,7 +23,7 @@ export default function About() {
                 ))}
               </div>
               <div className="mt-auto flex flex-wrap gap-2 pt-10">
-                {['Full-stack', 'Web & mobile', 'Real-time', 'AI & RAG', 'Clean code'].map((t) => (
+                {['Full-stack', 'Web & mobile', 'Problem solver', 'Fast learner', 'Clean code'].map((t) => (
                   <span key={t} className="chip">
                     {t}
                   </span>

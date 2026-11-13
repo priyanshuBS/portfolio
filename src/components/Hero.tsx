@@ -1,20 +1,19 @@
 import { motion } from 'motion/react'
 import { ArrowDownRight, Check, Copy } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
-import { profile, projects } from '../data/resume'
+import { profile } from '../data/resume'
 import { ease, Magnetic, socials, useClock, useCopyEmail } from './ui'
 
 type Line = { kind: 'cmd' | 'out'; text: string; tone?: 'ok' | 'accent' | 'dim' }
 
 const script: Line[] = [
   { kind: 'cmd', text: 'whoami' },
-  { kind: 'out', text: 'priyanshu singh · full-stack & mobile developer' },
-  { kind: 'cmd', text: 'ls ~/shipped --recent' },
-  ...projects.slice(0, 4).map<Line>((p) => ({
-    kind: 'out',
-    tone: 'ok',
-    text: `${p.name.padEnd(12)}${(p.platforms ?? ['web']).join(' · ').toLowerCase()}`,
-  })),
+  { kind: 'out', text: 'priyanshu singh · full-stack developer' },
+  { kind: 'cmd', text: 'cat stack.txt' },
+  { kind: 'out', tone: 'ok', text: 'frontend   react · next.js · tailwind' },
+  { kind: 'out', tone: 'ok', text: 'mobile     react native · expo' },
+  { kind: 'out', tone: 'ok', text: 'backend    node.js · express · java' },
+  { kind: 'out', tone: 'ok', text: 'data       postgresql · mongodb · redis' },
   { kind: 'cmd', text: 'cat status.txt' },
   { kind: 'out', tone: 'accent', text: 'open to internships & full-time roles' },
 ]
@@ -72,8 +71,8 @@ function Terminal() {
         )}
       </div>
       <p className="sr-only">
-        {profile.name}, full-stack and mobile developer. Projects include {projects.map((p) => p.name).join(', ')}. Open to
-        internships and full-time roles.
+        {profile.name}, full-stack developer working across frontend, mobile, backend and data. Open to internships and
+        full-time roles.
       </p>
     </div>
   )
@@ -159,9 +158,8 @@ export default function Hero() {
           </h1>
 
           <motion.p {...up(0.35)} className="mt-7 max-w-xl text-lg leading-relaxed text-muted">
-            I’m <span className="text-fg">Priyanshu Singh</span>. I build complete products end to end, from real-time chat and
-            AI-powered assistants to marketplaces and cross-platform mobile apps, using TypeScript, React, Node.js and the databases
-            behind them.
+            I’m <span className="text-fg">Priyanshu Singh</span>, a developer who turns ideas into fast, reliable products. I work
+            across the whole stack, from data and APIs to the interfaces people use every day, on the web and on mobile.
           </motion.p>
 
           <motion.div {...up(0.45)} className="mt-9 flex flex-wrap items-center gap-3">
