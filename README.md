@@ -1,18 +1,26 @@
-# Priyanshu Singh — Portfolio
+# Priyanshu Singh · Portfolio
 
-Personal portfolio built with **React 19 + TypeScript + Vite + Tailwind CSS v4 + Motion**.
+My personal site: projects, stack and how to reach me.
 
-## Scripts
+**Live:** [priyanshusingh.co.in](https://priyanshusingh.co.in)
+
+## Built with
+
+React 19 · TypeScript · Vite · Tailwind CSS v4 · Motion · Lenis
+
+## Run locally
+
 ```bash
-npm install      # install deps
-npm run dev      # start dev server (http://localhost:5173)
+npm install
+npm run dev      # http://localhost:5173
 npm run build    # type-check + production build to dist/
-npm run preview  # preview the production build
 ```
 
-## Editing content
-All text (profile, experience, projects, skills, education, achievements) lives in
-`src/data/resume.ts`.
+## Update content
+
+All text and projects live in [`src/data/resume.ts`](src/data/resume.ts).
+Project screenshots go in `public/projects/` (1440×900 `.webp`).
 
 ## Deploy
-Import the repo on Vercel or Netlify. Framework preset: Vite, build `npm run build`, output `dist`.
+
+Any static host works. On Vercel or Netlify use the Vite preset: build `npm run build`, output `dist`.

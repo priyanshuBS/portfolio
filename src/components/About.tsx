@@ -1,10 +1,9 @@
 import { MapPin, Sparkles } from 'lucide-react'
-import { about, profile, projects, stats } from '../data/resume'
+import { about, profile, stats } from '../data/resume'
 import { CountUp, Reveal, SectionHead, trackSpotlight, useClock } from './ui'
 
 export default function About() {
   const time = useClock()
-  const latest = projects.filter((p) => p.featured)
 
   return (
     <section id="about" aria-label="About" className="relative py-20 sm:py-28">
@@ -24,7 +23,7 @@ export default function About() {
                 ))}
               </div>
               <div className="mt-auto flex flex-wrap gap-2 pt-10">
-                {['Product-minded', 'Type-safe', 'Offline-first', 'Tested', 'Detail-obsessed'].map((t) => (
+                {['Full-stack', 'Web & mobile', 'Real-time', 'AI & RAG', 'Clean code'].map((t) => (
                   <span key={t} className="chip">
                     {t}
                   </span>
@@ -55,7 +54,7 @@ export default function About() {
               <Sparkles className="size-5" />
               <p className="mt-6 font-mono text-[11px] tracking-[0.16em] uppercase opacity-70">Currently</p>
               <p className="mt-2 text-xl leading-snug font-semibold tracking-tight">
-                Polishing {latest.map((p) => p.name).join(' & ')} for the app stores, and looking for my next team.
+                Building and shipping new products, and looking for an internship or full-time role where I can do the same.
               </p>
             </div>
           </Reveal>

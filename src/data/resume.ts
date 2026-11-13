@@ -16,8 +16,8 @@ export const profile = {
 }
 
 export const about = [
-  "I'm a Computer Science undergraduate at Noida Institute of Engineering and Technology who likes owning a product end to end: the schema, the API, the UI, the deploy and the test suite that keeps it honest.",
-  'Lately that means shipping cross-platform apps: one TypeScript codebase that runs on the web, Android and iOS, backed by Postgres, typed APIs and the odd AI pipeline. I care about the details users feel, like instant interactions, offline support and sensible defaults.',
+  "I'm a Computer Science undergraduate at Noida Institute of Engineering and Technology who enjoys taking an idea all the way to a live product: designing the data model, building the API, crafting the interface and deploying it.",
+  'So far that has meant real-time apps over WebSockets, AI features built on RAG and LLMs, e-commerce with payments, and mobile apps for Android and iOS. I work mostly in TypeScript, JavaScript and Java, with React, Next.js, React Native and Node.js on top of PostgreSQL, MongoDB and Redis, and I care about clean code and the small details users notice.',
 ]
 
 export const stats = [
