@@ -1,18 +1,19 @@
 const items = [
   'TypeScript',
+  'JavaScript',
+  'Java',
   'React',
   'Next.js',
   'React Native',
-  'Expo',
   'Node.js',
-  'Hono',
+  'Express',
+  'Socket.IO',
   'PostgreSQL',
-  'Drizzle',
+  'MongoDB',
   'Redis',
   'Tailwind CSS',
   'Docker',
-  'RAG',
-  'GitHub Actions',
+  'AI & RAG',
 ]
 
 export default function Marquee() {
