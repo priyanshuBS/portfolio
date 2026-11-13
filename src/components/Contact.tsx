@@ -1,88 +1,55 @@
-import { ArrowUp, ArrowUpRight, Check, Copy } from 'lucide-react'
-import { useState } from 'react'
+import { ArrowUp, ArrowUpRight, Check, Copy, Mail } from 'lucide-react'
 import { profile } from '../data/resume'
-import { Magnetic, MaskText, Reveal, socials, useClock } from './ui'
-
-function Marquee() {
-  const items = Array.from({ length: 4 })
-  return (
-    <div className="flex overflow-hidden border-y border-white/10 py-6 sm:py-8" aria-hidden="true">
-      <div className="flex w-max shrink-0 animate-marquee items-center">
-        {[...items, ...items].map((_, i) => (
-          <span key={i} className="flex items-center font-display text-6xl font-bold tracking-[-0.04em] whitespace-nowrap sm:text-8xl">
-            <span className={i % 2 ? 'text-stroke' : ''}>Let’s work together</span>
-            <span className="mx-8 text-4xl text-violet sm:mx-12 sm:text-6xl">✦</span>
-          </span>
-        ))}
-      </div>
-    </div>
-  )
-}
+import { openPalette } from './Navbar'
+import { Magnetic, MaskText, Reveal, socials, useClock, useCopyEmail } from './ui'
 
 export default function Contact() {
   const time = useClock()
-  const [copied, setCopied] = useState(false)
-  const copy = async () => {
-    try {
-      await navigator.clipboard.writeText(profile.email)
-      setCopied(true)
-      setTimeout(() => setCopied(false), 2000)
-    } catch {
-      window.location.href = `mailto:${profile.email}`
-    }
-  }
+  const { copied, copy } = useCopyEmail()
 
   return (
-    <footer id="contact" className="relative overflow-hidden pt-20 sm:pt-28">
-      <div aria-hidden="true" className="pointer-events-none absolute bottom-0 left-1/2 h-[500px] w-[min(1100px,140%)] -translate-x-1/2 translate-y-1/3 rounded-full bg-violet/25 blur-[150px]" />
+    <footer id="contact" className="relative overflow-hidden pt-16 sm:pt-24">
+      <div className="container-x">
+        <div className="card relative overflow-hidden px-6 py-16 text-center sm:px-12 sm:py-24">
+          <div aria-hidden="true" className="dot-grid absolute inset-0 [mask-image:radial-gradient(ellipse_60%_70%_at_50%_100%,#000,transparent)]" />
+          <div aria-hidden="true" className="absolute -bottom-40 left-1/2 h-80 w-[700px] max-w-[160%] -translate-x-1/2 rounded-full bg-accent/20 blur-[100px]" />
 
-      <Marquee />
-
-      <div className="container-x relative py-20 sm:py-28">
-        <div className="grid items-center gap-14 lg:grid-cols-[1fr_auto]">
-          <div>
-            <p className="eyebrow text-lilac">(05) Contact</p>
-            <h2 className="mt-6 font-display text-[clamp(2.6rem,6.5vw,6rem)] leading-[0.92] font-bold tracking-[-0.045em]">
-              <MaskText lines={['Have an idea?', <span className="gradient-text">Let’s build it.</span>]} />
+          <div className="relative">
+            <Reveal className="flex justify-center">
+              <span className="chip gap-2">
+                <span className="size-1.5 rounded-full bg-emerald-500" /> Replies within a day
+              </span>
+            </Reveal>
+            <h2 className="mx-auto mt-7 max-w-3xl text-[clamp(2.4rem,6.5vw,5.2rem)] leading-[0.95] font-semibold tracking-[-0.045em]">
+              <MaskText lines={['Have an idea?', <span className="serif text-accent-ink">Let’s build it.</span>]} />
             </h2>
             <Reveal delay={0.1}>
-              <p className="mt-8 max-w-md text-lg text-muted">
-                Open to internships, full-time roles and freelance work. My inbox is always open.
+              <p className="mx-auto mt-6 max-w-md text-lg text-muted">
+                Open to internships, full-time roles and freelance work. Tell me what you’re building.
               </p>
-              <button
-                onClick={copy}
-                className="group mt-8 inline-flex max-w-full items-center gap-3 border-b border-white/20 pb-2 font-display text-xl font-medium transition-colors hover:border-white sm:text-3xl"
-                aria-live="polite"
-              >
-                <span className="truncate">{copied ? 'Copied to clipboard!' : profile.email}</span>
-                {copied ? <Check className="size-5 shrink-0 text-emerald-400" /> : <Copy className="size-5 shrink-0 text-muted group-hover:text-fg" />}
-              </button>
+              <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
+                <Magnetic>
+                  <a href={`mailto:${profile.email}`} className="btn btn-accent group h-13 px-7 text-[15px]">
+                    <Mail className="size-4" /> Say hello
+                    <ArrowUpRight className="size-4 transition-transform group-hover:rotate-45" />
+                  </a>
+                </Magnetic>
+                <button onClick={copy} className="btn btn-ghost h-13 px-6 font-mono text-[13px]" aria-live="polite">
+                  {copied ? <Check className="size-4 text-emerald-500" /> : <Copy className="size-4" />}
+                  {copied ? 'Copied to clipboard' : profile.email}
+                </button>
+              </div>
             </Reveal>
           </div>
-
-          <Reveal delay={0.2} className="justify-self-center lg:justify-self-end">
-            <Magnetic strength={0.4}>
-              <a
-                href={`mailto:${profile.email}`}
-                className="group relative grid size-44 place-items-center overflow-hidden rounded-full bg-gradient-to-br from-violet via-indigo-500 to-cyan-500 text-center font-display text-lg font-semibold text-white shadow-[0_20px_80px_-20px_rgb(139_92_246/0.9)] sm:size-52"
-              >
-                <span className="absolute inset-0 translate-y-full rounded-full bg-white transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-y-0" />
-                <span className="relative flex flex-col items-center gap-1 transition-colors duration-500 group-hover:text-bg">
-                  <ArrowUpRight className="size-7 transition-transform duration-500 group-hover:rotate-45" />
-                  Get in touch
-                </span>
-              </a>
-            </Magnetic>
-          </Reveal>
         </div>
 
-        <div className="mt-24 grid gap-10 border-t border-white/10 pt-10 text-sm sm:grid-cols-3">
+        <div className="mt-16 grid gap-10 border-t border-line pt-10 pb-10 text-sm sm:grid-cols-3">
           <div>
-            <p className="eyebrow">Socials</p>
-            <ul className="mt-4 space-y-2">
+            <p className="eyebrow">Elsewhere</p>
+            <ul className="mt-2">
               {socials.map(({ href, label, Icon }) => (
                 <li key={label}>
-                  <a href={href} target="_blank" rel="noopener" className="group inline-flex items-center gap-2.5 text-fg/80 hover:text-fg">
+                  <a href={href} target="_blank" rel="noopener" className="group inline-flex items-center gap-2.5 py-2 text-muted hover:text-fg">
                     <Icon className="size-4" /> {label}
                     <ArrowUpRight className="size-3.5 opacity-0 transition-opacity group-hover:opacity-100" />
                   </a>
@@ -92,18 +59,21 @@ export default function Contact() {
           </div>
           <div>
             <p className="eyebrow">Local time</p>
-            <p className="mt-4 text-fg/80">
+            <p className="mt-4 text-muted tabular-nums">
               {time} · {profile.location}
             </p>
+            <button onClick={openPalette} className="mt-1 hidden items-center gap-2 py-2 text-muted hover:text-fg sm:inline-flex">
+              Press <span className="kbd">{/Mac|iPhone|iPad/.test(navigator.userAgent) ? '⌘' : 'Ctrl'}</span>
+              <span className="kbd">K</span> to explore
+            </button>
           </div>
           <div className="flex items-end justify-between gap-6 sm:flex-col sm:items-end">
-            <p className="text-muted sm:order-2">© {new Date().getFullYear()} {profile.name}</p>
-            <a
-              href="#top"
-              className="group inline-flex items-center gap-2 text-fg/80 hover:text-fg sm:order-1"
-            >
+            <p className="text-subtle sm:order-2">
+              © {new Date().getFullYear()} {profile.name}
+            </p>
+            <a href="#top" className="group inline-flex items-center gap-2 text-muted hover:text-fg sm:order-1">
               Back to top
-              <span className="grid size-9 place-items-center rounded-full border border-white/15 transition-colors group-hover:bg-white group-hover:text-bg">
+              <span className="grid size-9 place-items-center rounded-full border border-line-strong transition-colors group-hover:border-transparent group-hover:bg-accent group-hover:text-on-accent">
                 <ArrowUp className="size-4" />
               </span>
             </a>
@@ -113,7 +83,7 @@ export default function Contact() {
 
       <p
         aria-hidden="true"
-        className="pointer-events-none relative -mb-[3vw] text-center font-display text-[19vw] leading-none font-extrabold tracking-[-0.06em] text-white/[0.04] select-none"
+        className="pointer-events-none -mb-[2.5vw] bg-gradient-to-b from-fg/[0.07] to-transparent bg-clip-text text-center text-[18vw] leading-none font-bold tracking-[-0.06em] text-transparent select-none"
       >
         PRIYANSHU
       </p>

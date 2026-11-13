@@ -1,166 +1,187 @@
-import { motion, useScroll, useSpring, useTransform } from 'motion/react'
-import { ArrowUpRight } from 'lucide-react'
-import { useLayoutEffect, useRef, useState } from 'react'
+import { ArrowUpRight, Globe, Smartphone } from 'lucide-react'
+import type { CSSProperties } from 'react'
 import { profile, projects, type Project } from '../data/resume'
-import { GithubIcon, MaskText, Reveal, SectionLabel, useMedia } from './ui'
+import { GithubIcon, Reveal, SectionHead, trackSpotlight } from './ui'
 
-const glows = ['bg-indigo-500/30', 'bg-violet-500/30', 'bg-cyan-500/25']
+const host = (url: string) => new URL(url).host
 
-function ProjectCard({ p, i, wide }: { p: Project; i: number; wide?: boolean }) {
+function BrowserShot({ p, className = '' }: { p: Project; className?: string }) {
   return (
-    <article
-      className={`glass group relative flex shrink-0 flex-col overflow-hidden rounded-[28px] ${
-        wide ? 'h-[min(72vh,640px)] w-[min(78vw,1100px)] lg:flex-row' : 'w-full'
-      }`}
+    <a
+      href={p.live}
+      target="_blank"
+      rel="noopener"
+      aria-label={`Open ${p.name} live site`}
+      className={`group/shot block min-w-0 overflow-hidden rounded-xl border border-line bg-surface-2 shadow-[0_20px_60px_-25px_rgb(0_0_0/0.55)] ${className}`}
     >
-      <div aria-hidden="true" className={`pointer-events-none absolute -top-32 -left-32 size-96 rounded-full blur-[110px] ${glows[i % glows.length]}`} />
-
-      {/* screenshot */}
-      <a
-        href={p.live}
-        target="_blank"
-        rel="noopener"
-        aria-label={`Open ${p.name}`}
-        data-cursor
-        className={`relative m-3 overflow-hidden rounded-[20px] border border-white/10 bg-black sm:m-4 ${
-          wide ? 'aspect-[16/10] lg:w-[60%] lg:shrink-0 lg:self-center' : 'aspect-[16/10]'
-        }`}
-      >
+      <div className="flex items-center gap-1.5 border-b border-line px-3 py-2">
+        <span className="size-2 rounded-full bg-line-strong" />
+        <span className="size-2 rounded-full bg-line-strong" />
+        <span className="size-2 rounded-full bg-line-strong" />
+        <span className="mx-auto flex max-w-[70%] items-center gap-1.5 truncate rounded-md bg-bg/60 px-3 py-0.5 font-mono text-[10.5px] text-subtle">
+          <Globe className="size-2.5 shrink-0" />
+          {host(p.live)}
+        </span>
+      </div>
+      <div className="relative aspect-[16/10] overflow-hidden bg-black">
         <img
           src={p.image}
           alt={`${p.name} screenshot`}
           loading="lazy"
           width={1440}
           height={900}
-          className="size-full object-cover object-top transition-transform duration-[1.2s] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-105"
+          className="size-full object-cover object-top transition-transform duration-[1.2s] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover/shot:scale-[1.04]"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
-        <span className="absolute right-4 bottom-4 grid size-12 translate-y-2 place-items-center rounded-full bg-white text-bg opacity-0 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100">
-          <ArrowUpRight className="size-5" />
+        <span className="absolute right-3 bottom-3 flex translate-y-2 items-center gap-1.5 rounded-full bg-accent px-3 py-1.5 text-xs font-medium text-on-accent opacity-0 transition-all duration-300 group-hover/shot:translate-y-0 group-hover/shot:opacity-100">
+          Visit live <ArrowUpRight className="size-3.5" />
         </span>
-      </a>
-
-      {/* info */}
-      <div className="relative flex flex-1 flex-col p-6 pt-3 sm:p-8 sm:pt-4 lg:pt-8">
-        <div className="flex items-center justify-between font-mono text-xs text-muted">
-          <span>({String(i + 1).padStart(2, '0')})</span>
-          <span>{new URL(p.live).host}</span>
-        </div>
-        <h3 className="mt-6 font-display text-4xl font-bold tracking-[-0.03em] sm:text-5xl">{p.name}</h3>
-        <p className="gradient-text mt-2 font-medium">{p.tagline}</p>
-        <p className="mt-4 leading-relaxed text-muted">{p.description}</p>
-        <ul className="mt-5 flex flex-wrap gap-2">
-          {p.tags.map((t) => (
-            <li key={t} className="pill">
-              {t}
-            </li>
-          ))}
-        </ul>
-        <div className="mt-auto flex flex-wrap gap-3 pt-8">
-          <a href={p.live} target="_blank" rel="noopener" className="btn btn-light h-11 px-5">
-            Visit site <ArrowUpRight className="size-4" />
-          </a>
-          <a href={p.source} target="_blank" rel="noopener" className="btn btn-glass h-11 px-5">
-            <GithubIcon className="size-4" /> Code
-          </a>
-        </div>
       </div>
-    </article>
+    </a>
   )
 }
 
-function Intro() {
+function Links({ p }: { p: Project }) {
   return (
-    <div className="flex shrink-0 flex-col justify-between lg:h-[min(72vh,640px)] lg:w-[min(34vw,460px)]">
-      <div>
-        <SectionLabel index="02">Selected work</SectionLabel>
-        <h2 className="mt-8 font-display text-[clamp(3rem,7vw,6.5rem)] leading-[0.9] font-bold tracking-[-0.045em]">
-          <MaskText lines={['Things', 'I’ve', <span className="text-stroke">shipped.</span>]} />
-        </h2>
-      </div>
-      <Reveal className="mt-8 max-w-xs lg:mt-0">
-        <p className="text-muted">Real products, live in production — built end-to-end from database to UI.</p>
-        <a
-          href={profile.socials.github}
-          target="_blank"
-          rel="noopener"
-          className="group mt-6 inline-flex items-center gap-2 text-sm font-medium"
-        >
-          <GithubIcon className="size-4" /> More on GitHub
-          <ArrowUpRight className="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-        </a>
-      </Reveal>
+    <div className="flex flex-wrap gap-2">
+      <a href={p.live} target="_blank" rel="noopener" className="btn btn-accent h-10 px-4 text-[13px]">
+        Live site <ArrowUpRight className="size-4" />
+      </a>
+      <a href={p.source} target="_blank" rel="noopener" className="btn btn-ghost h-10 px-4 text-[13px]">
+        <GithubIcon className="size-4" /> Source
+      </a>
     </div>
   )
 }
 
-/** Desktop: vertical scroll drives a horizontal track. */
-function HorizontalGallery() {
-  const section = useRef<HTMLElement>(null)
-  const track = useRef<HTMLDivElement>(null)
-  const [distance, setDistance] = useState(0)
-
-  useLayoutEffect(() => {
-    const measure = () => {
-      if (track.current) setDistance(Math.max(0, track.current.scrollWidth - innerWidth))
-    }
-    measure()
-    const ro = new ResizeObserver(measure)
-    if (track.current) ro.observe(track.current)
-    addEventListener('resize', measure)
-    return () => {
-      ro.disconnect()
-      removeEventListener('resize', measure)
-    }
-  }, [])
-
-  const { scrollYProgress } = useScroll({ target: section, offset: ['start start', 'end end'] })
-  const smooth = useSpring(scrollYProgress, { stiffness: 120, damping: 30, mass: 0.3 })
-  const x = useTransform(smooth, [0, 1], [0, -distance])
+function Featured({ p, i }: { p: Project; i: number }) {
+  const flip = i % 2 === 1
 
   return (
-    <section
-      ref={section}
-      id="projects"
-      aria-label="Selected work"
-      className="relative"
-      style={{ height: `calc(100vh + ${distance}px)` }}
-    >
-      <div className="sticky top-0 flex h-screen items-center overflow-hidden">
-        <div aria-hidden="true" className="pointer-events-none absolute right-0 bottom-0 size-[600px] rounded-full bg-cyan/10 blur-[150px]" />
-        <motion.div ref={track} style={{ x }} className="flex items-center gap-8 pr-[8vw] pl-12 xl:pl-[max(3rem,calc((100vw-80rem)/2+3rem))]">
-          <Intro />
-          {projects.map((p, i) => (
-            <ProjectCard key={p.name} p={p} i={i} wide />
-          ))}
-        </motion.div>
-
-        {/* progress */}
-        <div className="absolute right-36 bottom-8 left-12 flex items-center gap-4 font-mono text-[11px] tracking-[0.18em] text-muted uppercase">
-          <span>Scroll</span>
-          <div className="h-px flex-1 bg-white/10">
-            <motion.div style={{ scaleX: smooth }} className="h-px origin-left bg-gradient-to-r from-violet to-cyan" />
-          </div>
-          <span>{String(projects.length).padStart(2, '0')} projects</span>
+    <Reveal>
+      <article
+        onPointerMove={trackSpotlight}
+        style={{ '--glow': p.color } as CSSProperties}
+        className="spotlight card grid grid-cols-[minmax(0,1fr)] gap-8 p-5 sm:p-8 lg:grid-cols-2 lg:gap-12 lg:p-10"
+      >
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden rounded-[inherit]">
+          <div
+            className={`absolute -top-24 size-80 rounded-full opacity-20 blur-[100px] ${flip ? '-left-20' : '-right-20'}`}
+            style={{ background: p.color }}
+          />
         </div>
-      </div>
-    </section>
+
+        <div className={`relative lg:sticky lg:top-28 lg:self-start ${flip ? 'lg:order-2' : ''}`}>
+          <BrowserShot p={p} />
+        </div>
+
+        <div className="relative flex flex-col">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="font-mono text-xs text-subtle">0{i + 1} — {p.year}</span>
+            <span className="chip ml-auto">
+              <span className="size-1.5 rounded-full" style={{ background: p.color }} />
+              {p.platforms?.includes('Android') ? <Smartphone className="size-3" /> : <Globe className="size-3" />}
+              {p.platforms?.join(' · ')}
+            </span>
+          </div>
+
+          <h3 className="mt-5 text-4xl font-semibold tracking-[-0.035em] sm:text-5xl">{p.name}</h3>
+          <p className="serif mt-1 text-2xl text-muted">{p.tagline}</p>
+          <p className="mt-5 leading-relaxed text-muted">{p.description}</p>
+
+          {p.highlights && (
+            <ul className="mt-6 space-y-2.5 text-[14.5px]">
+              {p.highlights.map((h) => (
+                <li key={h} className="flex gap-3">
+                  <span className="mt-[9px] h-px w-3 shrink-0" style={{ background: p.color }} />
+                  <span className="text-fg/85">{h}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+
+          <ul className="mt-6 flex flex-wrap gap-1.5">
+            {p.tags.map((t) => (
+              <li key={t} className="chip">
+                {t}
+              </li>
+            ))}
+          </ul>
+
+          <div className="mt-auto pt-8">
+            <Links p={p} />
+          </div>
+        </div>
+      </article>
+    </Reveal>
+  )
+}
+
+function Compact({ p, i, wide }: { p: Project; i: number; wide?: boolean }) {
+  return (
+    <Reveal delay={i * 0.08} className={`h-full ${wide ? 'md:col-span-2 lg:col-span-1' : ''}`}>
+      <article
+        onPointerMove={trackSpotlight}
+        style={{ '--glow': p.color } as CSSProperties}
+        className={`spotlight card flex h-full flex-col p-4 transition-transform duration-500 hover:-translate-y-1 ${wide ? 'md:flex-row md:gap-6 lg:flex-col lg:gap-0' : ''}`}
+      >
+        <BrowserShot p={p} className={wide ? 'md:w-1/2 md:shrink-0 md:self-start lg:w-auto' : ''} />
+        <div className={`flex flex-1 flex-col px-1 pt-5 pb-1 ${wide ? 'md:pt-2 lg:pt-5' : ''}`}>
+          <div className="flex items-baseline justify-between gap-3">
+            <h3 className="text-2xl font-semibold tracking-[-0.03em]">{p.name}</h3>
+            <span className="font-mono text-xs text-subtle">{p.year}</span>
+          </div>
+          <p className="serif text-lg text-muted">{p.tagline}</p>
+          <p className="mt-3 text-sm leading-relaxed text-muted">{p.description}</p>
+          <ul className="mt-4 flex flex-wrap gap-1.5">
+            {p.tags.map((t) => (
+              <li key={t} className="chip">
+                {t}
+              </li>
+            ))}
+          </ul>
+          <div className="mt-auto flex items-center gap-2 pt-4 text-sm">
+            <a href={p.live} target="_blank" rel="noopener" className="group -ml-2 inline-flex items-center gap-1 rounded-lg px-2 py-2.5 font-medium hover:text-accent-ink">
+              Live <ArrowUpRight className="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+            </a>
+            <a href={p.source} target="_blank" rel="noopener" className="inline-flex items-center gap-1.5 rounded-lg px-2 py-2.5 text-muted hover:text-fg">
+              <GithubIcon className="size-3.5" /> Source
+            </a>
+          </div>
+        </div>
+      </article>
+    </Reveal>
   )
 }
 
 export default function Projects() {
-  const desktop = useMedia('(min-width: 1024px)')
-  if (desktop) return <HorizontalGallery />
+  const featured = projects.filter((p) => p.featured)
+  const rest = projects.filter((p) => !p.featured)
 
   return (
-    <section id="projects" aria-label="Selected work" className="relative py-24 sm:py-32">
+    <section id="work" aria-label="Selected work" className="relative py-20 sm:py-28">
       <div className="container-x">
-        <Intro />
-        <div className="mt-14 space-y-6">
-          {projects.map((p, i) => (
-            <Reveal key={p.name}>
-              <ProjectCard p={p} i={i} />
-            </Reveal>
+        <SectionHead index="01" label="Selected work" title={['Things I’ve', <span className="serif text-accent-ink">shipped.</span>]}>
+          Real products, live in production, built end to end from the database to the pixel.
+        </SectionHead>
+
+        <div className="mt-14 space-y-6 sm:mt-20">
+          {featured.map((p, i) => (
+            <Featured key={p.name} p={p} i={i} />
+          ))}
+        </div>
+
+        <Reveal className="mt-20 mb-8 flex items-center gap-4">
+          <span className="eyebrow">More projects</span>
+          <span className="h-px flex-1 bg-line" />
+          <a href={profile.socials.github} target="_blank" rel="noopener" className="group inline-flex items-center gap-1.5 py-2.5 text-sm text-muted hover:text-fg">
+            <GithubIcon className="size-4" /> All on GitHub
+            <ArrowUpRight className="size-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+          </a>
+        </Reveal>
+
+        <div className="grid grid-cols-[minmax(0,1fr)] gap-5 md:grid-cols-2 lg:grid-cols-3">
+          {rest.map((p, i) => (
+            <Compact key={p.name} p={p} i={i} wide={rest.length % 2 === 1 && i === rest.length - 1} />
           ))}
         </div>
       </div>

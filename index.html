@@ -1,20 +1,32 @@
 <!doctype html>
-<html lang="en" class="dark">
+<html lang="en" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Priyanshu Singh — Full-Stack Developer</title>
-    <meta name="description" content="Priyanshu Singh — Full-Stack Developer building real-time and AI-powered web applications with React, Node.js, TypeScript and Java." />
+    <title>Priyanshu Singh — Full-Stack & Mobile Developer</title>
+    <meta name="description" content="Priyanshu Singh — full-stack developer shipping real products to web, Android and iOS with React, Next.js, React Native, Node.js and TypeScript." />
     <meta name="author" content="Priyanshu Singh" />
-    <meta property="og:title" content="Priyanshu Singh — Full-Stack Developer" />
-    <meta property="og:description" content="Full-stack developer building real-time, AI-powered and production-grade web applications." />
+    <meta property="og:title" content="Priyanshu Singh — Full-Stack & Mobile Developer" />
+    <meta property="og:description" content="Builder of PaiPai, Learn5, ExplainThis and more — production apps across web, Android and iOS." />
     <meta property="og:url" content="https://priyanshusingh.co.in" />
     <meta property="og:type" content="website" />
-    <meta name="theme-color" content="#050508" />
+    <meta property="og:image" content="https://priyanshusingh.co.in/projects/paipai.webp" />
+    <meta name="theme-color" content="#09090b" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Inter:wght@400..700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <!-- load fonts without blocking the first render; text shows in system fonts until they arrive -->
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Geist:wght@300..800&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" />
+    <link rel="stylesheet" media="print" onload="this.media='all'" href="https://fonts.googleapis.com/css2?family=Geist:wght@300..800&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" />
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300..800&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" /></noscript>
+    <script>
+      // apply saved theme before paint to avoid a flash
+      try {
+        var t = localStorage.getItem('theme')
+        if (!t) t = matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'
+        document.documentElement.dataset.theme = t
+      } catch (e) {}
+    </script>
   </head>
   <body>
     <div id="root"></div>

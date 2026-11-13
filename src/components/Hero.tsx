@@ -1,135 +1,218 @@
-import { motion, useScroll, useTransform } from 'motion/react'
-import { ArrowDown } from 'lucide-react'
-import { lazy, Suspense, useRef } from 'react'
-import { profile } from '../data/resume'
-const ParticleSphere = lazy(() => import('./ParticleSphere'))
-import { ease, useClock } from './ui'
+import { motion } from 'motion/react'
+import { ArrowDownRight, Check, Copy } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
+import { profile, projects } from '../data/resume'
+import { ease, Magnetic, socials, useClock, useCopyEmail } from './ui'
 
-function SplitWord({ word, delay, ready, className = '' }: { word: string; delay: number; ready: boolean; className?: string }) {
-  return (
-    <span className={`flex overflow-hidden ${className}`} aria-hidden="true">
-      {word.split('').map((ch, i) => (
-        <motion.span
-          key={i}
-          initial={{ y: '110%', rotate: 8 }}
-          animate={ready ? { y: '0%', rotate: 0 } : {}}
-          transition={{ duration: 1.1, delay: delay + i * 0.035, ease }}
-          className="inline-block origin-bottom-left"
-        >
-          {ch}
-        </motion.span>
-      ))}
-    </span>
-  )
-}
+type Line = { kind: 'cmd' | 'out'; text: string; tone?: 'ok' | 'accent' | 'dim' }
 
-function RotatingBadge() {
-  const text = 'SCROLL TO EXPLORE • SCROLL TO EXPLORE • '
-  return (
-    <a href="#about" aria-label="Scroll to about" className="group relative grid size-28 place-items-center">
-      <svg viewBox="0 0 100 100" className="absolute inset-0 animate-spin-slow" aria-hidden="true">
-        <defs>
-          <path id="circle" d="M50,50 m-38,0 a38,38 0 1,1 76,0 a38,38 0 1,1 -76,0" />
-        </defs>
-        <text className="fill-white/60 font-mono text-[8.2px] tracking-[0.18em]">
-          <textPath href="#circle">{text}</textPath>
-        </text>
-      </svg>
-      <span className="grid size-11 place-items-center rounded-full border border-white/20 bg-white/5 backdrop-blur transition-colors group-hover:bg-white group-hover:text-bg">
-        <ArrowDown className="size-4" />
-      </span>
-    </a>
-  )
-}
+const featured = projects.filter((p) => p.featured)
 
-export default function Hero({ ready }: { ready: boolean }) {
-  const ref = useRef<HTMLElement>(null)
+const script: Line[] = [
+  { kind: 'cmd', text: 'whoami' },
+  { kind: 'out', text: 'priyanshu singh · full-stack & mobile developer' },
+  { kind: 'cmd', text: 'ls ~/shipped --recent' },
+  ...projects.slice(0, 4).map<Line>((p) => ({
+    kind: 'out',
+    tone: 'ok',
+    text: `${p.name.padEnd(12)}${(p.platforms ?? ['web']).join(' · ').toLowerCase()}`,
+  })),
+  { kind: 'cmd', text: 'cat status.txt' },
+  { kind: 'out', tone: 'accent', text: 'open to internships & full-time roles' },
+]
+
+function Terminal() {
+  const reduced = typeof window !== 'undefined' && matchMedia('(prefers-reduced-motion: reduce)').matches
+  const [shown, setShown] = useState(reduced ? script.length : 0)
+  const [typed, setTyped] = useState(0)
   const time = useClock()
-  const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] })
-  const sphereScale = useTransform(scrollYProgress, [0, 1], [1, 1.35])
-  const sphereOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0])
-  const textY = useTransform(scrollYProgress, [0, 1], ['0%', '35%'])
 
-  const fadeUp = (delay: number) => ({
-    initial: { opacity: 0, y: 20 },
-    animate: ready ? { opacity: 1, y: 0 } : {},
-    transition: { duration: 1, delay, ease },
+  useEffect(() => {
+    if (shown >= script.length) return
+    const line = script[shown]
+    if (line.kind === 'out') {
+      const t = setTimeout(() => setShown((s) => s + 1), 140)
+      return () => clearTimeout(t)
+    }
+    if (typed < line.text.length) {
+      const t = setTimeout(() => setTyped((n) => n + 1), 38 + Math.random() * 40)
+      return () => clearTimeout(t)
+    }
+    const t = setTimeout(() => {
+      setShown((s) => s + 1)
+      setTyped(0)
+    }, 320)
+    return () => clearTimeout(t)
+  }, [shown, typed])
+
+  const done = shown >= script.length
+  const current = script[shown]
+
+  return (
+    <div className="card overflow-hidden shadow-[0_30px_80px_-30px_rgb(0_0_0/0.5)]">
+      <div className="flex items-center gap-2 border-b border-line px-4 py-3">
+        <span className="size-2.5 rounded-full bg-[#ff5f57]" />
+        <span className="size-2.5 rounded-full bg-[#febc2e]" />
+        <span className="size-2.5 rounded-full bg-[#28c840]" />
+        <span className="ml-3 truncate font-mono text-[11px] text-subtle">priyanshu@noida — zsh</span>
+        <span className="ml-auto shrink-0 pl-2 font-mono text-[11px] whitespace-nowrap text-subtle tabular-nums">{time} IST</span>
+      </div>
+      <div className="no-scrollbar min-h-[300px] overflow-x-auto p-4 font-mono text-[11px] leading-[1.9] sm:p-5 sm:text-[13px]" aria-hidden="true">
+        {script.slice(0, shown).map((l, i) => (
+          <TermLine key={i} line={l} />
+        ))}
+        {!done && current.kind === 'cmd' && (
+          <p>
+            <span className="text-accent-ink">❯</span> <span className="text-subtle">~</span> {current.text.slice(0, typed)}
+            <Caret />
+          </p>
+        )}
+        {done && (
+          <p>
+            <span className="text-accent-ink">❯</span> <span className="text-subtle">~</span> <Caret />
+          </p>
+        )}
+      </div>
+      <p className="sr-only">
+        {profile.name}, full-stack and mobile developer. Recently shipped {featured.map((p) => p.name).join(' and ')}. Open to
+        internships and full-time roles.
+      </p>
+    </div>
+  )
+}
+
+const Caret = () => <span className="ml-0.5 inline-block h-[1.1em] w-[0.55em] translate-y-[0.2em] animate-blink bg-fg/80" />
+
+function TermLine({ line }: { line: Line }) {
+  if (line.kind === 'cmd')
+    return (
+      <p>
+        <span className="text-accent-ink">❯</span> <span className="text-subtle">~</span> {line.text}
+      </p>
+    )
+  return (
+    <p className={`whitespace-pre ${line.tone === 'accent' ? 'text-accent-ink' : line.tone === 'ok' ? 'text-fg/85' : 'text-muted'}`}>
+      {line.tone === 'ok' && <span className="text-emerald-500">✓ </span>}
+      {line.tone === 'accent' && <span>● </span>}
+      {line.text}
+    </p>
+  )
+}
+
+export default function Hero() {
+  const ref = useRef<HTMLElement>(null)
+  const { copied, copy } = useCopyEmail()
+
+  useEffect(() => {
+    const el = ref.current
+    if (!el || !matchMedia('(pointer: fine)').matches) return
+    const on = (e: PointerEvent) => {
+      const r = el.getBoundingClientRect()
+      el.style.setProperty('--mx', `${e.clientX - r.left}px`)
+      el.style.setProperty('--my', `${e.clientY - r.top}px`)
+    }
+    el.addEventListener('pointermove', on)
+    return () => el.removeEventListener('pointermove', on)
+  }, [])
+
+  const up = (delay: number) => ({
+    initial: { opacity: 0, y: 24 },
+    animate: { opacity: 1, y: 0 },
+    transition: { duration: 0.9, delay, ease },
   })
 
   return (
-    <section ref={ref} id="top" className="relative h-svh min-h-[640px] overflow-hidden">
-      {/* 3D background */}
-      <motion.div style={{ scale: sphereScale, opacity: sphereOpacity }} className="absolute inset-0">
-        <div aria-hidden="true" className="absolute top-1/2 left-1/2 size-[70vmin] -translate-x-1/2 -translate-y-1/2 rounded-full bg-violet/20 blur-[120px]" />
-        <motion.div
-          initial={{ opacity: 0, scale: 0.6 }}
-          animate={ready ? { opacity: 1, scale: 1 } : {}}
-          transition={{ duration: 2, ease }}
-          className="absolute inset-0"
-        >
-          <Suspense fallback={null}>
-            <ParticleSphere />
-          </Suspense>
-        </motion.div>
-      </motion.div>
-      <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-bg to-transparent" />
+    <section ref={ref} id="top" className="relative overflow-hidden pt-32 pb-20 sm:pt-40 lg:min-h-svh lg:pb-24">
+      {/* backgrounds */}
+      <div aria-hidden="true" className="dot-grid absolute inset-0 [mask-image:radial-gradient(ellipse_80%_70%_at_50%_30%,#000_30%,transparent_100%)]" />
+      <div
+        aria-hidden="true"
+        className="dot-grid pointer-events-none absolute inset-0 [--dot:var(--accent-ink)] [mask-image:radial-gradient(220px_circle_at_var(--mx,-999px)_var(--my,-999px),#000,transparent)]"
+      />
+      <div aria-hidden="true" className="pointer-events-none absolute -top-40 left-1/2 h-[500px] w-[900px] -translate-x-1/2 rounded-full bg-accent/[0.07] blur-[120px]" />
 
-      <motion.div style={{ y: textY }} className="container-x relative flex h-full flex-col justify-between pt-24 pb-8 sm:pb-10">
-        {/* top meta */}
-        <div className="flex items-start justify-between gap-4 font-mono text-[11px] tracking-[0.18em] text-muted uppercase">
-          <motion.div {...fadeUp(0.6)} className="space-y-1">
-            <p className="flex items-center gap-2 text-fg">
-              <span className="relative flex size-2">
-                <span className="absolute inline-flex size-full animate-ping rounded-full bg-emerald-400 opacity-75" />
-                <span className="relative inline-flex size-2 rounded-full bg-emerald-400" />
-              </span>
-              Available for work
-            </p>
-            <p>Internships · Full-time</p>
-          </motion.div>
-          <motion.div {...fadeUp(0.7)} className="space-y-1 text-right">
-            <p className="text-fg">{profile.location}</p>
-            <p>{time} IST</p>
-          </motion.div>
-        </div>
-
-        {/* name */}
+      <div className="container-x relative grid grid-cols-[minmax(0,1fr)] items-center gap-14 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] lg:gap-12">
         <div>
-          <h1 className="sr-only">
-            {profile.name}, {profile.title}
+          <motion.a {...up(0)} href="#contact" className="chip group gap-2 py-1.5 pr-3 pl-2 text-[11.5px] hover:border-line-strong">
+            <span className="relative flex size-2">
+              <span className="absolute inline-flex size-full animate-ping rounded-full bg-emerald-500 opacity-75" />
+              <span className="relative inline-flex size-2 rounded-full bg-emerald-500" />
+            </span>
+            <span className="sm:hidden">Open to work</span>
+            <span className="hidden sm:inline">Available for internships & full-time</span>
+            <ArrowDownRight className="size-3 -rotate-90 transition-transform group-hover:translate-x-0.5" />
+          </motion.a>
+
+          <h1 className="mt-7 text-[clamp(2.6rem,6.4vw,5.4rem)] leading-[0.95] font-semibold tracking-[-0.045em]">
+            <span className="sr-only">{profile.name}, </span>
+            {['Full-stack developer', 'shipping to'].map((l, i) => (
+              <span key={l} className="block overflow-hidden pb-[0.06em]">
+                <motion.span className="block" initial={{ y: '105%' }} animate={{ y: 0 }} transition={{ duration: 1, delay: 0.1 + i * 0.08, ease }}>
+                  {l}
+                </motion.span>
+              </span>
+            ))}
+            <span className="block overflow-hidden pb-[0.12em]">
+              <motion.span className="block" initial={{ y: '105%' }} animate={{ y: 0 }} transition={{ duration: 1, delay: 0.26, ease }}>
+                <span className="serif text-accent-ink">web</span> <span className="text-muted">&</span>{' '}
+                <span className="serif text-accent-ink">mobile.</span>
+              </motion.span>
+            </span>
           </h1>
-          <div className="font-display leading-[0.82] font-extrabold tracking-[-0.05em] select-none">
-            <SplitWord word="PRIYANSHU" delay={0.1} ready={ready} className="text-[clamp(3.6rem,15.5vw,15rem)]" />
-            <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-6">
-              <SplitWord
-                word="SINGH"
-                delay={0.3}
-                ready={ready}
-                className="text-[clamp(3.6rem,15.5vw,15rem)] [&>span]:bg-gradient-to-b [&>span]:from-white [&>span]:to-white/30 [&>span]:bg-clip-text [&>span]:text-transparent"
-              />
-              <motion.p
-                {...fadeUp(0.9)}
-                className="max-w-sm pb-[2.5vw] font-sans text-base leading-relaxed font-normal tracking-normal text-fg/75 sm:text-lg"
-              >
-                Full-stack developer crafting <span className="text-fg">real-time</span> and{' '}
-                <span className="gradient-text font-medium">AI-powered</span> web experiences with React, Node.js &
-                TypeScript.
-              </motion.p>
+
+          <motion.p {...up(0.35)} className="mt-7 max-w-xl text-lg leading-relaxed text-muted">
+            I’m <span className="text-fg">Priyanshu Singh</span>. I design, build and ship complete products, from Postgres schemas and
+            typed APIs to polished React and React Native interfaces. Most recently{' '}
+            {featured.map((p, i) => (
+              <span key={p.name}>
+                <a href={p.live} target="_blank" rel="noopener" className="text-fg underline decoration-line-strong underline-offset-4 hover:decoration-accent-ink">
+                  {p.name}
+                </a>
+                {i < featured.length - 1 ? ' and ' : ''}
+              </span>
+            ))}
+            , both live on web, Android and iOS.
+          </motion.p>
+
+          <motion.div {...up(0.45)} className="mt-9 flex flex-wrap items-center gap-3">
+            <Magnetic>
+              <a href="#work" className="btn btn-accent group h-12 px-6">
+                See my work
+                <ArrowDownRight className="size-4 transition-transform group-hover:rotate-45" />
+              </a>
+            </Magnetic>
+            <button onClick={copy} className="btn btn-ghost h-12 px-5" aria-live="polite">
+              {copied ? <Check className="size-4 text-emerald-500" /> : <Copy className="size-4" />}
+              {copied ? 'Copied!' : 'Copy email'}
+            </button>
+            <div className="ml-1 flex items-center gap-1">
+              {socials.map(({ href, label, Icon }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noopener"
+                  aria-label={label}
+                  className="grid size-11 place-items-center rounded-full text-muted transition-colors hover:bg-surface-2 hover:text-fg"
+                >
+                  <Icon className="size-[18px]" />
+                </a>
+              ))}
             </div>
-          </div>
+          </motion.div>
         </div>
 
-        {/* bottom row */}
-        <div className="flex items-end justify-between gap-6">
-          <motion.div {...fadeUp(1.1)} className="hidden font-mono text-[11px] tracking-[0.18em] text-muted uppercase sm:block">
-            <p>(Scroll)</p>
-            <p className="mt-1 text-fg">Selected work 2024 — {new Date().getFullYear()}</p>
-          </motion.div>
-          <motion.div {...fadeUp(1.2)} className="ml-auto">
-            <RotatingBadge />
-          </motion.div>
-        </div>
-      </motion.div>
+        <motion.div
+          initial={{ opacity: 0, y: 40, rotateX: 12 }}
+          animate={{ opacity: 1, y: 0, rotateX: 0 }}
+          transition={{ duration: 1.2, delay: 0.3, ease }}
+          style={{ transformPerspective: 1200 }}
+          className="relative"
+        >
+          <div aria-hidden="true" className="absolute -inset-6 -z-10 rounded-[32px] bg-gradient-to-br from-accent/20 via-transparent to-indigo-500/20 blur-3xl" />
+          <Terminal />
+        </motion.div>
+      </div>
     </section>
   )
 }

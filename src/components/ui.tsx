@@ -1,33 +1,25 @@
 import { animate, motion, useInView, useMotionValue, useSpring } from 'motion/react'
-import { useEffect, useRef, useState, type ReactNode, type PointerEvent } from 'react'
+import { useCallback, useEffect, useRef, useState, type PointerEvent, type ReactNode } from 'react'
 import { profile } from '../data/resume'
 
 export const ease = [0.22, 1, 0.36, 1] as const
 
 export const navLinks = [
+  { id: 'work', label: 'Work' },
   { id: 'about', label: 'About' },
-  { id: 'projects', label: 'Work' },
-  { id: 'skills', label: 'Skills' },
+  { id: 'stack', label: 'Stack' },
   { id: 'journey', label: 'Journey' },
   { id: 'contact', label: 'Contact' },
 ]
 
-export function Reveal({
-  children,
-  delay = 0,
-  className,
-}: {
-  children: ReactNode
-  delay?: number
-  className?: string
-}) {
+export function Reveal({ children, delay = 0, className }: { children: ReactNode; delay?: number; className?: string }) {
   return (
     <motion.div
       className={className}
-      initial={{ opacity: 0, y: 40 }}
+      initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-60px' }}
-      transition={{ duration: 0.9, delay, ease }}
+      transition={{ duration: 0.8, delay, ease }}
     >
       {children}
     </motion.div>
@@ -36,18 +28,17 @@ export function Reveal({
 
 /** Text that slides up from behind a mask, line by line. */
 export function MaskText({ lines, className = '', delay = 0 }: { lines: ReactNode[]; className?: string; delay?: number }) {
-  // observe the (visible) wrapper — the lines themselves start clipped out of view
   const ref = useRef<HTMLSpanElement>(null)
   const inView = useInView(ref, { once: true, margin: '0px 0px -10% 0px' })
   return (
     <span ref={ref} className={`block ${className}`}>
       {lines.map((l, i) => (
-        <span key={i} className="block overflow-hidden pb-[0.08em]">
+        <span key={i} className="block overflow-hidden pb-[0.1em]">
           <motion.span
             className="block"
             initial={{ y: '110%' }}
             animate={inView ? { y: 0 } : undefined}
-            transition={{ duration: 1, delay: delay + i * 0.08, ease }}
+            transition={{ duration: 0.9, delay: delay + i * 0.08, ease }}
           >
             {l}
           </motion.span>
@@ -57,18 +48,26 @@ export function MaskText({ lines, className = '', delay = 0 }: { lines: ReactNod
   )
 }
 
-export function SectionLabel({ index, children }: { index: string; children: ReactNode }) {
+export function SectionHead({ index, label, title, children }: { index: string; label: string; title: ReactNode[]; children?: ReactNode }) {
   return (
-    <Reveal className="flex items-center gap-4">
-      <span className="eyebrow text-lilac">({index})</span>
-      <span className="h-px w-12 bg-white/20" />
-      <span className="eyebrow">{children}</span>
-    </Reveal>
+    <div className="grid gap-6 md:grid-cols-[1fr_auto] md:items-end">
+      <div>
+        <Reveal className="flex items-center gap-3">
+          <span className="font-mono text-[11px] text-accent-ink">{index}</span>
+          <span className="h-px w-8 bg-line-strong" />
+          <span className="eyebrow">{label}</span>
+        </Reveal>
+        <h2 className="mt-5 text-[clamp(2.2rem,5vw,4rem)] leading-[0.98] font-semibold tracking-[-0.04em]">
+          <MaskText lines={title} />
+        </h2>
+      </div>
+      {children && <Reveal delay={0.1} className="max-w-sm text-muted md:text-right">{children}</Reveal>}
+    </div>
   )
 }
 
 /** Pulls its child toward the cursor. */
-export function Magnetic({ children, strength = 0.35, className }: { children: ReactNode; strength?: number; className?: string }) {
+export function Magnetic({ children, strength = 0.3, className }: { children: ReactNode; strength?: number; className?: string }) {
   const x = useMotionValue(0)
   const y = useMotionValue(0)
   const sx = useSpring(x, { stiffness: 200, damping: 15, mass: 0.4 })
@@ -94,13 +93,20 @@ export function Magnetic({ children, strength = 0.35, className }: { children: R
   )
 }
 
+/** Pointer handler for `.spotlight` elements: feeds the cursor position to CSS. */
+export function trackSpotlight(e: PointerEvent<HTMLElement>) {
+  const r = e.currentTarget.getBoundingClientRect()
+  e.currentTarget.style.setProperty('--x', `${e.clientX - r.left}px`)
+  e.currentTarget.style.setProperty('--y', `${e.clientY - r.top}px`)
+}
+
 export function CountUp({ to, decimals = 0, suffix = '' }: { to: number; decimals?: number; suffix?: string }) {
   const ref = useRef<HTMLSpanElement>(null)
   const inView = useInView(ref, { once: true })
   const [val, setVal] = useState(0)
   useEffect(() => {
     if (!inView) return
-    const c = animate(0, to, { duration: 2, ease, onUpdate: setVal })
+    const c = animate(0, to, { duration: 1.8, ease, onUpdate: setVal })
     return () => c.stop()
   }, [inView, to])
   return (
@@ -113,12 +119,7 @@ export function CountUp({ to, decimals = 0, suffix = '' }: { to: number; decimal
 
 export function useClock() {
   const fmt = () =>
-    new Intl.DateTimeFormat('en-IN', {
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: true,
-      timeZone: 'Asia/Kolkata',
-    }).format(new Date())
+    new Intl.DateTimeFormat('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true, timeZone: 'Asia/Kolkata' }).format(new Date())
   const [time, setTime] = useState(fmt)
   useEffect(() => {
     const id = setInterval(() => setTime(fmt()), 15_000)
@@ -136,6 +137,42 @@ export function useMedia(query: string) {
     return () => mq.removeEventListener('change', on)
   }, [query])
   return match
+}
+
+type Theme = 'dark' | 'light'
+export function useTheme() {
+  const [theme, setTheme] = useState<Theme>(() => (document.documentElement.dataset.theme as Theme) || 'dark')
+  useEffect(() => {
+    const sync = () => setTheme((document.documentElement.dataset.theme as Theme) || 'dark')
+    addEventListener('themechange', sync)
+    return () => removeEventListener('themechange', sync)
+  }, [])
+  const toggle = useCallback(() => {
+    const next: Theme = document.documentElement.dataset.theme === 'light' ? 'dark' : 'light'
+    document.documentElement.dataset.theme = next
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', next === 'light' ? '#f7f7f4' : '#09090b')
+    try {
+      localStorage.setItem('theme', next)
+    } catch {
+      /* storage unavailable */
+    }
+    dispatchEvent(new Event('themechange'))
+  }, [])
+  return { theme, toggle }
+}
+
+export function useCopyEmail() {
+  const [copied, setCopied] = useState(false)
+  const copy = useCallback(async () => {
+    try {
+      await navigator.clipboard.writeText(profile.email)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    } catch {
+      window.location.href = `mailto:${profile.email}`
+    }
+  }, [])
+  return { copied, copy }
 }
 
 /* ---------- brand icons (not included in lucide) ---------- */
