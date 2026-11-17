@@ -1,46 +1,35 @@
 import { Blocks, BrainCircuit, Code2, Database, MonitorSmartphone, Server } from 'lucide-react'
 import { skills } from '../data/resume'
-import { Reveal, SectionHead, trackSpotlight } from './ui'
+import { Reveal, Section } from './ui'
 
 const icons = [Code2, Blocks, MonitorSmartphone, Server, Database, BrainCircuit]
 
 export default function Skills() {
   return (
-    <section id="stack" aria-label="Tech stack" className="relative py-20 sm:py-28">
-      <div className="container-x">
-        <SectionHead index="03" label="Stack" title={['A toolkit for', <span className="script text-gradient">every layer.</span>]}>
-          The tools I reach for to take an idea from first sketch to production.
-        </SectionHead>
-
-        <div className="mt-14 grid gap-4 sm:mt-20 sm:grid-cols-2 lg:grid-cols-3">
-          {skills.map((g, i) => {
-            const Icon = icons[i % icons.length]
-            return (
-              <Reveal key={g.group} delay={(i % 3) * 0.08} className="h-full">
-                <div onPointerMove={trackSpotlight} className="spotlight card group h-full p-6">
-                  <div className="flex items-center justify-between">
-                    <span className="grid size-10 place-items-center rounded-xl border border-line bg-surface-2 text-muted transition-colors duration-300 group-hover:border-transparent group-hover:bg-accent group-hover:text-on-accent">
-                      <Icon className="size-[18px]" />
-                    </span>
-                    <span className="font-mono text-[11px] text-subtle">0{i + 1}</span>
-                  </div>
-                  <h3 className="mt-6 text-lg font-semibold tracking-tight">{g.group}</h3>
-                  <ul className="mt-4 flex flex-wrap gap-1.5">
-                    {g.items.map((item) => (
-                      <li
-                        key={item}
-                        className="rounded-md border border-line bg-surface-2/50 px-2.5 py-1 text-[13px] text-fg/85 transition-colors hover:border-line-strong hover:text-fg"
-                      >
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </Reveal>
-            )
-          })}
-        </div>
+    <Section id="stack" index="03" label="Stack">
+      <div className="grid gap-px overflow-hidden rounded-2xl border border-line bg-line sm:grid-cols-2">
+        {skills.map((g, i) => {
+          const Icon = icons[i % icons.length]
+          return (
+            <Reveal key={g.group} delay={(i % 2) * 0.05} className="group bg-bg p-6 transition-colors hover:bg-surface">
+              <div className="flex items-center gap-3">
+                <span className="grid size-9 place-items-center rounded-lg border border-line text-muted transition-colors group-hover:border-transparent group-hover:bg-fg group-hover:text-bg">
+                  <Icon className="size-4" />
+                </span>
+                <h3 className="font-semibold">{g.group}</h3>
+              </div>
+              <ul className="mt-4 flex flex-wrap gap-x-1 gap-y-1.5 text-sm text-muted">
+                {g.items.map((item, j) => (
+                  <li key={item}>
+                    {item}
+                    {j < g.items.length - 1 && <span className="ml-1 text-line-strong">/</span>}
+                  </li>
+                ))}
+              </ul>
+            </Reveal>
+          )
+        })}
       </div>
-    </section>
+    </Section>
   )
 }

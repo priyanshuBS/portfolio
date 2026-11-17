@@ -5,8 +5,8 @@ import { profile } from '../data/resume'
 export const ease = [0.22, 1, 0.36, 1] as const
 
 export const navLinks = [
-  { id: 'work', label: 'Work' },
   { id: 'about', label: 'About' },
+  { id: 'work', label: 'Work' },
   { id: 'stack', label: 'Stack' },
   { id: 'journey', label: 'Journey' },
   { id: 'contact', label: 'Contact' },
@@ -48,21 +48,22 @@ export function MaskText({ lines, className = '', delay = 0 }: { lines: ReactNod
   )
 }
 
-export function SectionHead({ index, label, title, children }: { index: string; label: string; title: ReactNode[]; children?: ReactNode }) {
+/**
+ * A content section in the right-hand column. Its label sticks to the top
+ * of the screen on phones and tablets, and sits inline on desktop.
+ */
+export function Section({ id, index, label, children, last }: { id: string; index: string; label: string; children: ReactNode; last?: boolean }) {
   return (
-    <div className="grid gap-6 md:grid-cols-[1fr_auto] md:items-end">
-      <div>
-        <Reveal className="flex items-center gap-3">
-          <span className="font-mono text-[11px] text-accent-ink">{index}</span>
-          <span className="h-px w-8 bg-line-strong" />
-          <span className="eyebrow">{label}</span>
-        </Reveal>
-        <h2 className="mt-5 text-[clamp(2.2rem,5vw,4rem)] leading-[0.98] font-semibold tracking-[-0.04em]">
-          <MaskText lines={title} />
+    <section id={id} aria-label={label} className={`scroll-mt-4 ${last ? '' : 'mb-24 lg:mb-32'}`}>
+      <div className="sticky top-0 z-20 -mx-5 mb-8 bg-bg/85 px-5 py-4 backdrop-blur-md sm:-mx-8 sm:px-8 lg:static lg:mx-0 lg:mb-10 lg:bg-transparent lg:px-0 lg:py-0 lg:backdrop-blur-none">
+        <h2 className="flex items-center gap-3 font-mono text-xs tracking-[0.16em] uppercase">
+          <span className="text-subtle">{index}</span>
+          <span className="text-fg">{label}</span>
+          <span className="h-px flex-1 bg-line" />
         </h2>
       </div>
-      {children && <Reveal delay={0.1} className="max-w-sm text-muted md:text-right">{children}</Reveal>}
-    </div>
+      {children}
+    </section>
   )
 }
 
@@ -150,7 +151,7 @@ export function useTheme() {
   const toggle = useCallback(() => {
     const next: Theme = document.documentElement.dataset.theme === 'light' ? 'dark' : 'light'
     document.documentElement.dataset.theme = next
-    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', next === 'light' ? '#f2f8ff' : '#050d1a')
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', next === 'light' ? '#ffffff' : '#0a0a0a')
     try {
       localStorage.setItem('theme', next)
     } catch {
