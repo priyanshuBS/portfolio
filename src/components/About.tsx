@@ -8,7 +8,7 @@ export default function About() {
   return (
     <section id="about" aria-label="About" className="relative py-20 sm:py-28">
       <div className="container-x">
-        <SectionHead index="02" label="About" title={['Engineer by trade,', <span className="serif text-accent-ink">builder by habit.</span>]} />
+        <SectionHead index="02" label="About" title={['Engineer by trade,', <span className="script text-gradient">builder by habit.</span>]} />
 
         <div className="mt-14 grid gap-4 sm:mt-20 md:grid-cols-6">
           {/* bio */}

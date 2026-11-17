@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="light">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -10,21 +10,21 @@
     <meta property="og:description" content="Full-stack developer building fast, reliable products for the web and mobile." />
     <meta property="og:url" content="https://priyanshusingh.co.in" />
     <meta property="og:type" content="website" />
-    <meta property="og:image" content="https://priyanshusingh.co.in/projects/paipai.webp" />
-    <meta name="theme-color" content="#09090b" />
+    <meta property="og:image" content="https://priyanshusingh.co.in/projects/keeplocal.webp" />
+    <meta name="theme-color" content="#f2f8ff" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <!-- load fonts without blocking the first render; text shows in system fonts until they arrive -->
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Geist:wght@300..800&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" />
-    <link rel="stylesheet" media="print" onload="this.media='all'" href="https://fonts.googleapis.com/css2?family=Geist:wght@300..800&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" />
-    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300..800&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" /></noscript>
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300..800&family=Dancing+Script:wght@500..700&family=JetBrains+Mono:wght@400;500&display=swap" />
+    <link rel="stylesheet" media="print" onload="this.media='all'" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300..800&family=Dancing+Script:wght@500..700&family=JetBrains+Mono:wght@400;500&display=swap" />
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300..800&family=Dancing+Script:wght@500..700&family=JetBrains+Mono:wght@400;500&display=swap" /></noscript>
     <script>
       // apply saved theme before paint to avoid a flash
       try {
         var t = localStorage.getItem('theme')
-        if (!t) t = matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'
+        if (t !== 'dark') t = 'light' // sky-blue light theme by default
         document.documentElement.dataset.theme = t
       } catch (e) {}
     </script>

@@ -143,16 +143,16 @@ export default function Hero() {
           <h1 className="mt-7 text-[clamp(2.6rem,6.4vw,5.4rem)] leading-[0.95] font-semibold tracking-[-0.045em]">
             <span className="sr-only">{profile.name}, </span>
             {['Full-stack developer', 'shipping to'].map((l, i) => (
-              <span key={l} className="block overflow-hidden pb-[0.06em]">
+              <span key={l} className="block overflow-hidden pb-[0.16em] -mb-[0.08em]">
                 <motion.span className="block" initial={{ y: '105%' }} animate={{ y: 0 }} transition={{ duration: 1, delay: 0.1 + i * 0.08, ease }}>
                   {l}
                 </motion.span>
               </span>
             ))}
-            <span className="block overflow-hidden pb-[0.12em]">
+            <span className="block overflow-hidden pb-[0.18em]">
               <motion.span className="block" initial={{ y: '105%' }} animate={{ y: 0 }} transition={{ duration: 1, delay: 0.26, ease }}>
-                <span className="serif text-accent-ink">web</span> <span className="text-muted">&</span>{' '}
-                <span className="serif text-accent-ink">mobile.</span>
+                <span className="script text-gradient">web</span> <span className="text-muted">&</span>{' '}
+                <span className="script text-gradient">mobile.</span>
               </motion.span>
             </span>
           </h1>
@@ -197,7 +197,7 @@ export default function Hero() {
           style={{ transformPerspective: 1200 }}
           className="relative"
         >
-          <div aria-hidden="true" className="absolute -inset-6 -z-10 rounded-[32px] bg-gradient-to-br from-accent/20 via-transparent to-indigo-500/20 blur-3xl" />
+          <div aria-hidden="true" className="absolute -inset-6 -z-10 rounded-[32px] bg-gradient-to-br from-accent/20 via-transparent to-blue-600/20 blur-3xl" />
           <Terminal />
         </motion.div>
       </div>

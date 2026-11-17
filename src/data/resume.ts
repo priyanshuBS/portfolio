@@ -21,7 +21,7 @@ export const about = [
 ]
 
 export const stats = [
-  { value: 5, decimals: 0, suffix: '', label: 'Products live in production' },
+  { value: 6, decimals: 0, suffix: '', label: 'Products live in production' },
   { value: 3, decimals: 0, suffix: '', label: 'Platforms shipped: web, Android, iOS' },
   { value: 8.38, decimals: 2, suffix: '', label: 'CGPA, B.Tech CSE' },
 ]
@@ -42,6 +42,26 @@ export type Project = {
 }
 
 export const projects: Project[] = [
+  {
+    name: 'KeepLocal',
+    tagline: 'Convert anything. Upload nothing.',
+    image: '/projects/keeplocal.webp',
+    live: 'https://keeplocal.priyanshusingh.co.in',
+    source: 'https://github.com/priyanshuBS/KeepLocal',
+    year: '2026',
+    featured: true,
+    platforms: ['Web', 'Offline'],
+    color: '#0ea5e9',
+    description:
+      'A file converter that runs entirely in your browser. Drop in an image, PDF, video, audio or data file, pick a format and download the result. Your file never leaves your computer: there is no server, just static files and WebAssembly doing the work on your own device.',
+    highlights: [
+      'Images, PDF and Markdown, video, audio and CSV / JSON / YAML, all converted on-device',
+      'FFmpeg compiled to WebAssembly for media, with live progress and cancel',
+      'A strict Content Security Policy blocks every outside request, so even a bug cannot leak a file',
+      'Service worker caches the app, so it keeps working with Wi-Fi switched off',
+    ],
+    tags: ['TypeScript', 'Vite', 'FFmpeg.wasm', 'PDF.js', 'pdf-lib', 'Service Worker'],
+  },
   {
     name: 'PaiPai',
     tagline: 'Expense tracking, made for India',
@@ -126,7 +146,7 @@ export const skills = [
   { group: 'Mobile', items: ['React Native', 'Expo', 'Expo Router', 'NativeWind', 'Reanimated'] },
   { group: 'Backend', items: ['Node.js', 'Express', 'Hono', 'Socket.IO', 'REST APIs', 'JWT & OAuth'] },
   { group: 'Data', items: ['PostgreSQL', 'MongoDB', 'Redis', 'Prisma', 'Drizzle', 'Pinecone'] },
-  { group: 'AI & DevOps', items: ['RAG', 'LLM APIs', 'GitHub Actions', 'Docker', 'Vercel', 'Jest'] },
+  { group: 'AI & DevOps', items: ['RAG', 'LLM APIs', 'WebAssembly', 'GitHub Actions', 'Docker', 'Vercel', 'Jest'] },
 ]
 
 export const education = [

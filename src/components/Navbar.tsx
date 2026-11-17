@@ -85,8 +85,8 @@ export default function Navbar() {
           }`}
         >
           <a href="#top" className="group flex items-center gap-2.5" aria-label="Priyanshu Singh, back to top">
-            <span className="grid size-8 place-items-center rounded-lg bg-fg font-mono text-xs font-semibold text-bg transition-transform group-hover:-rotate-6">
-              PS
+            <span className="grid size-9 place-items-center rounded-xl bg-gradient-to-br from-sky-300 to-blue-500 font-script text-lg font-bold text-white shadow-[0_6px_20px_-6px_rgb(37_99_235/0.6)] transition-transform group-hover:-rotate-6">
+              Ps
             </span>
             <span className="hidden text-sm font-medium sm:block md:hidden lg:block">Priyanshu Singh</span>
           </a>

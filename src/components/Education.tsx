@@ -14,7 +14,7 @@ export default function Education() {
   return (
     <section id="journey" aria-label="Journey" className="relative py-20 sm:py-28">
       <div className="container-x">
-        <SectionHead index="04" label="Journey" title={['Always learning,', <span className="serif text-accent-ink">always building.</span>]} />
+        <SectionHead index="04" label="Journey" title={['Always learning,', <span className="script text-gradient">always building.</span>]} />
 
         <div className="mt-14 grid gap-12 sm:mt-20 lg:grid-cols-[1.2fr_1fr] lg:gap-16">
           {/* education timeline */}

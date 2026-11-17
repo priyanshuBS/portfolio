@@ -33,7 +33,7 @@ export function MaskText({ lines, className = '', delay = 0 }: { lines: ReactNod
   return (
     <span ref={ref} className={`block ${className}`}>
       {lines.map((l, i) => (
-        <span key={i} className="block overflow-hidden pb-[0.1em]">
+        <span key={i} className="block overflow-hidden pb-[0.16em] -mb-[0.06em]">
           <motion.span
             className="block"
             initial={{ y: '110%' }}
@@ -141,16 +141,16 @@ export function useMedia(query: string) {
 
 type Theme = 'dark' | 'light'
 export function useTheme() {
-  const [theme, setTheme] = useState<Theme>(() => (document.documentElement.dataset.theme as Theme) || 'dark')
+  const [theme, setTheme] = useState<Theme>(() => (document.documentElement.dataset.theme as Theme) || 'light')
   useEffect(() => {
-    const sync = () => setTheme((document.documentElement.dataset.theme as Theme) || 'dark')
+    const sync = () => setTheme((document.documentElement.dataset.theme as Theme) || 'light')
     addEventListener('themechange', sync)
     return () => removeEventListener('themechange', sync)
   }, [])
   const toggle = useCallback(() => {
     const next: Theme = document.documentElement.dataset.theme === 'light' ? 'dark' : 'light'
     document.documentElement.dataset.theme = next
-    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', next === 'light' ? '#f7f7f4' : '#09090b')
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', next === 'light' ? '#f2f8ff' : '#050d1a')
     try {
       localStorage.setItem('theme', next)
     } catch {

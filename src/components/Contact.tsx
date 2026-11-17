@@ -21,7 +21,7 @@ export default function Contact() {
               </span>
             </Reveal>
             <h2 className="mx-auto mt-7 max-w-3xl text-[clamp(2.4rem,6.5vw,5.2rem)] leading-[0.95] font-semibold tracking-[-0.045em]">
-              <MaskText lines={['Have an idea?', <span className="serif text-accent-ink">Let’s build it.</span>]} />
+              <MaskText lines={['Have an idea?', <span className="script text-gradient">Let’s build it.</span>]} />
             </h2>
             <Reveal delay={0.1}>
               <p className="mx-auto mt-6 max-w-md text-lg text-muted">
@@ -83,9 +83,9 @@ export default function Contact() {
 
       <p
         aria-hidden="true"
-        className="pointer-events-none -mb-[2.5vw] bg-gradient-to-b from-fg/[0.07] to-transparent bg-clip-text text-center text-[18vw] leading-none font-bold tracking-[-0.06em] text-transparent select-none"
+        className="pointer-events-none -mb-[3vw] bg-gradient-to-b from-accent-ink/25 to-transparent bg-clip-text pb-[0.12em] text-center font-script text-[20vw] leading-none font-bold text-transparent select-none"
       >
-        PRIYANSHU
+        Priyanshu
       </p>
     </footer>
   )

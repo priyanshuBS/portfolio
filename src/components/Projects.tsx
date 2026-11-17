@@ -85,7 +85,7 @@ function Featured({ p, i }: { p: Project; i: number }) {
           </div>
 
           <h3 className="mt-5 text-4xl font-semibold tracking-[-0.035em] sm:text-5xl">{p.name}</h3>
-          <p className="serif mt-1 text-2xl text-muted">{p.tagline}</p>
+          <p className="script mt-1 text-2xl text-muted">{p.tagline}</p>
           <p className="mt-5 leading-relaxed text-muted">{p.description}</p>
 
           {p.highlights && (
@@ -130,7 +130,7 @@ function Compact({ p, i, wide }: { p: Project; i: number; wide?: boolean }) {
             <h3 className="text-2xl font-semibold tracking-[-0.03em]">{p.name}</h3>
             <span className="font-mono text-xs text-subtle">{p.year}</span>
           </div>
-          <p className="serif text-lg text-muted">{p.tagline}</p>
+          <p className="script text-lg text-muted">{p.tagline}</p>
           <p className="mt-3 text-sm leading-relaxed text-muted">{p.description}</p>
           <ul className="mt-4 flex flex-wrap gap-1.5">
             {p.tags.map((t) => (
@@ -160,7 +160,7 @@ export default function Projects() {
   return (
     <section id="work" aria-label="Selected work" className="relative py-20 sm:py-28">
       <div className="container-x">
-        <SectionHead index="01" label="Selected work" title={['Things I’ve', <span className="serif text-accent-ink">shipped.</span>]}>
+        <SectionHead index="01" label="Selected work" title={['Things I’ve', <span className="script text-gradient">shipped.</span>]}>
           Real products, live in production, built end to end from the database to the pixel.
         </SectionHead>
 

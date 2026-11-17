@@ -8,7 +8,7 @@ export default function Skills() {
   return (
     <section id="stack" aria-label="Tech stack" className="relative py-20 sm:py-28">
       <div className="container-x">
-        <SectionHead index="03" label="Stack" title={['A toolkit for', <span className="serif text-accent-ink">every layer.</span>]}>
+        <SectionHead index="03" label="Stack" title={['A toolkit for', <span className="script text-gradient">every layer.</span>]}>
           The tools I reach for to take an idea from first sketch to production.
         </SectionHead>
 
