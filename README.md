@@ -6,7 +6,7 @@ My personal site: projects, stack and how to reach me.
 
 ## Built with
 
-React 19 · TypeScript · Vite · Tailwind CSS v4 · Motion · Lenis
+React 19 · TypeScript · Vite · Tailwind CSS v4 · Motion
 
 ## Run locally
 

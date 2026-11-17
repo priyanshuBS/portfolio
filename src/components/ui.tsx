@@ -1,120 +1,42 @@
-import { animate, motion, useInView, useMotionValue, useSpring } from 'motion/react'
-import { useCallback, useEffect, useRef, useState, type PointerEvent, type ReactNode } from 'react'
+import { motion } from 'motion/react'
+import { useCallback, useEffect, useState, type MouseEvent, type ReactNode } from 'react'
 import { profile } from '../data/resume'
 
 export const ease = [0.22, 1, 0.36, 1] as const
 
 export const navLinks = [
-  { id: 'about', label: 'About' },
-  { id: 'work', label: 'Work' },
+  { id: 'work', label: 'Projects' },
+  { id: 'experience', label: 'Experience' },
   { id: 'stack', label: 'Stack' },
-  { id: 'journey', label: 'Journey' },
   { id: 'contact', label: 'Contact' },
 ]
 
+/** Gentle fade-in when scrolled into view. */
 export function Reveal({ children, delay = 0, className }: { children: ReactNode; delay?: number; className?: string }) {
   return (
     <motion.div
       className={className}
-      initial={{ opacity: 0, y: 24 }}
+      initial={{ opacity: 0, y: 8 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-60px' }}
-      transition={{ duration: 0.8, delay, ease }}
+      viewport={{ once: true, margin: '-40px' }}
+      transition={{ duration: 0.6, delay, ease }}
     >
       {children}
     </motion.div>
   )
 }
 
-/** Text that slides up from behind a mask, line by line. */
-export function MaskText({ lines, className = '', delay = 0 }: { lines: ReactNode[]; className?: string; delay?: number }) {
-  const ref = useRef<HTMLSpanElement>(null)
-  const inView = useInView(ref, { once: true, margin: '0px 0px -10% 0px' })
+/** A page section with a small, quiet heading. */
+export function Section({ id, title, children }: { id: string; title: string; children: ReactNode }) {
   return (
-    <span ref={ref} className={`block ${className}`}>
-      {lines.map((l, i) => (
-        <span key={i} className="block overflow-hidden pb-[0.16em] -mb-[0.06em]">
-          <motion.span
-            className="block"
-            initial={{ y: '110%' }}
-            animate={inView ? { y: 0 } : undefined}
-            transition={{ duration: 0.9, delay: delay + i * 0.08, ease }}
-          >
-            {l}
-          </motion.span>
-        </span>
-      ))}
-    </span>
-  )
-}
-
-/**
- * A content section in the right-hand column. Its label sticks to the top
- * of the screen on phones and tablets, and sits inline on desktop.
- */
-export function Section({ id, index, label, children, last }: { id: string; index: string; label: string; children: ReactNode; last?: boolean }) {
-  return (
-    <section id={id} aria-label={label} className={`scroll-mt-4 ${last ? '' : 'mb-24 lg:mb-32'}`}>
-      <div className="sticky top-0 z-20 -mx-5 mb-8 bg-bg/85 px-5 py-4 backdrop-blur-md sm:-mx-8 sm:px-8 lg:static lg:mx-0 lg:mb-10 lg:bg-transparent lg:px-0 lg:py-0 lg:backdrop-blur-none">
-        <h2 className="flex items-center gap-3 font-mono text-xs tracking-[0.16em] uppercase">
-          <span className="text-subtle">{index}</span>
-          <span className="text-fg">{label}</span>
-          <span className="h-px flex-1 bg-line" />
+    <section id={id} aria-labelledby={`${id}-title`} className="mt-20 scroll-mt-10 sm:mt-24">
+      <Reveal>
+        <h2 id={`${id}-title`} className="mb-6 text-sm font-medium text-subtle">
+          {title}
         </h2>
-      </div>
-      {children}
+        {children}
+      </Reveal>
     </section>
-  )
-}
-
-/** Pulls its child toward the cursor. */
-export function Magnetic({ children, strength = 0.3, className }: { children: ReactNode; strength?: number; className?: string }) {
-  const x = useMotionValue(0)
-  const y = useMotionValue(0)
-  const sx = useSpring(x, { stiffness: 200, damping: 15, mass: 0.4 })
-  const sy = useSpring(y, { stiffness: 200, damping: 15, mass: 0.4 })
-  const onMove = (e: PointerEvent<HTMLDivElement>) => {
-    if (e.pointerType !== 'mouse') return
-    const r = e.currentTarget.getBoundingClientRect()
-    x.set((e.clientX - (r.left + r.width / 2)) * strength)
-    y.set((e.clientY - (r.top + r.height / 2)) * strength)
-  }
-  return (
-    <motion.div
-      style={{ x: sx, y: sy }}
-      onPointerMove={onMove}
-      onPointerLeave={() => {
-        x.set(0)
-        y.set(0)
-      }}
-      className={`inline-block ${className ?? ''}`}
-    >
-      {children}
-    </motion.div>
-  )
-}
-
-/** Pointer handler for `.spotlight` elements: feeds the cursor position to CSS. */
-export function trackSpotlight(e: PointerEvent<HTMLElement>) {
-  const r = e.currentTarget.getBoundingClientRect()
-  e.currentTarget.style.setProperty('--x', `${e.clientX - r.left}px`)
-  e.currentTarget.style.setProperty('--y', `${e.clientY - r.top}px`)
-}
-
-export function CountUp({ to, decimals = 0, suffix = '' }: { to: number; decimals?: number; suffix?: string }) {
-  const ref = useRef<HTMLSpanElement>(null)
-  const inView = useInView(ref, { once: true })
-  const [val, setVal] = useState(0)
-  useEffect(() => {
-    if (!inView) return
-    const c = animate(0, to, { duration: 1.8, ease, onUpdate: setVal })
-    return () => c.stop()
-  }, [inView, to])
-  return (
-    <span ref={ref} className="tabular-nums">
-      {val.toFixed(decimals)}
-      {suffix}
-    </span>
   )
 }
 
@@ -129,36 +51,67 @@ export function useClock() {
   return time
 }
 
-export function useMedia(query: string) {
-  const [match, setMatch] = useState(() => matchMedia(query).matches)
-  useEffect(() => {
-    const mq = matchMedia(query)
-    const on = () => setMatch(mq.matches)
-    mq.addEventListener('change', on)
-    return () => mq.removeEventListener('change', on)
-  }, [query])
-  return match
-}
-
+/* ---------- light / dark theme ---------- */
 type Theme = 'dark' | 'light'
-export function useTheme() {
-  const [theme, setTheme] = useState<Theme>(() => (document.documentElement.dataset.theme as Theme) || 'light')
-  useEffect(() => {
-    const sync = () => setTheme((document.documentElement.dataset.theme as Theme) || 'light')
-    addEventListener('themechange', sync)
-    return () => removeEventListener('themechange', sync)
-  }, [])
-  const toggle = useCallback(() => {
-    const next: Theme = document.documentElement.dataset.theme === 'light' ? 'dark' : 'light'
-    document.documentElement.dataset.theme = next
-    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', next === 'light' ? '#ffffff' : '#0a0a0a')
+const THEME_COLOR = { light: '#fbfbfa', dark: '#0f0f0f' }
+
+function applyTheme(next: Theme, save: boolean) {
+  document.documentElement.dataset.theme = next
+  document.querySelector('meta[name="theme-color"]')?.setAttribute('content', THEME_COLOR[next])
+  if (save) {
     try {
       localStorage.setItem('theme', next)
     } catch {
       /* storage unavailable */
     }
-    dispatchEvent(new Event('themechange'))
+  }
+  dispatchEvent(new Event('themechange'))
+}
+
+export function useTheme() {
+  const [theme, setTheme] = useState<Theme>(() => (document.documentElement.dataset.theme as Theme) || 'light')
+
+  useEffect(() => {
+    const sync = () => setTheme((document.documentElement.dataset.theme as Theme) || 'light')
+    addEventListener('themechange', sync)
+    // follow the device setting until the visitor picks a theme themselves
+    const mq = matchMedia('(prefers-color-scheme: dark)')
+    const onSystem = () => {
+      let saved: string | null = null
+      try {
+        saved = localStorage.getItem('theme')
+      } catch {
+        /* storage unavailable */
+      }
+      if (!saved) applyTheme(mq.matches ? 'dark' : 'light', false)
+    }
+    mq.addEventListener('change', onSystem)
+    return () => {
+      removeEventListener('themechange', sync)
+      mq.removeEventListener('change', onSystem)
+    }
   }, [])
+
+  /** Switches theme; with a click event, the new theme spreads out in a circle from the pointer. */
+  const toggle = useCallback((e?: MouseEvent) => {
+    const next: Theme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (!document.startViewTransition || reduced) return applyTheme(next, true)
+
+    const x = e?.clientX ?? innerWidth / 2
+    const y = e?.clientY ?? innerHeight / 2
+    const r = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y))
+    const t = document.startViewTransition(() => applyTheme(next, true))
+    t.ready
+      .then(() =>
+        document.documentElement.animate(
+          { clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${r}px at ${x}px ${y}px)`] },
+          { duration: 650, easing: 'cubic-bezier(0.22, 1, 0.36, 1)', pseudoElement: '::view-transition-new(root)' },
+        ),
+      )
+      .catch(() => {})
+  }, [])
+
   return { theme, toggle }
 }
 
