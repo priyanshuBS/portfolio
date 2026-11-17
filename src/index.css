@@ -57,6 +57,11 @@
     background: var(--fg);
     color: var(--bg);
   }
+  /* Tailwind v4 leaves buttons with the default arrow cursor */
+  button:not(:disabled),
+  [role='button']:not(:disabled) {
+    cursor: pointer;
+  }
   :focus-visible {
     outline: 2px solid var(--fg);
     outline-offset: 3px;
