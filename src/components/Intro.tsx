@@ -45,7 +45,7 @@ export default function Intro() {
           <span className="size-2 rounded-full bg-emerald-500" /> Open to internships and full-time roles
         </motion.p>
         <motion.h1 {...fade(0.1)} className="mt-5 text-[clamp(2rem,6vw,2.9rem)] leading-[1.1] font-bold tracking-[-0.03em] text-balance">
-          I build fast, reliable products for the web and mobile.
+          I’m {profile.name}, a software engineer building fast, reliable products for the web and mobile.
         </motion.h1>
         <motion.div {...fade(0.15)} className="mt-6 space-y-4 leading-relaxed text-muted">
           {about.map((p, i) => (

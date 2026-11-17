@@ -27,7 +27,7 @@ export default function Contact() {
         <p>
           © {new Date().getFullYear()} {profile.name}
         </p>
-        <p className="tabular-nums">
+        <p className="tabular-nums" suppressHydrationWarning>
           {profile.location} · {time}
         </p>
       </footer>

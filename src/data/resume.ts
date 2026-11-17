@@ -4,7 +4,7 @@
 export const profile = {
   name: 'Priyanshu Singh',
   firstName: 'Priyanshu',
-  title: 'Full-Stack & Mobile Developer',
+  title: 'Software Engineer · Full-Stack & Mobile',
   location: 'Noida, India',
   email: 'dotpriyanshu@gmail.com',
   site: 'https://priyanshusingh.co.in',

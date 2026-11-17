@@ -1,5 +1,5 @@
 import { motion } from 'motion/react'
-import { useCallback, useEffect, useState, type MouseEvent, type ReactNode } from 'react'
+import { useCallback, useEffect, useState, useSyncExternalStore, type MouseEvent, type ReactNode } from 'react'
 import { profile } from '../data/resume'
 
 export const ease = [0.22, 1, 0.36, 1] as const
@@ -68,12 +68,17 @@ function applyTheme(next: Theme, save: boolean) {
   dispatchEvent(new Event('themechange'))
 }
 
+const readTheme = (): Theme => (document.documentElement.dataset.theme as Theme) || 'light'
+function subscribeTheme(onChange: () => void) {
+  addEventListener('themechange', onChange)
+  return () => removeEventListener('themechange', onChange)
+}
+
 export function useTheme() {
-  const [theme, setTheme] = useState<Theme>(() => (document.documentElement.dataset.theme as Theme) || 'light')
+  // the pre-rendered HTML always uses 'light'; React swaps in the real theme right after hydrating
+  const theme = useSyncExternalStore(subscribeTheme, readTheme, () => 'light' as Theme)
 
   useEffect(() => {
-    const sync = () => setTheme((document.documentElement.dataset.theme as Theme) || 'light')
-    addEventListener('themechange', sync)
     // follow the device setting until the visitor picks a theme themselves
     const mq = matchMedia('(prefers-color-scheme: dark)')
     const onSystem = () => {
@@ -86,10 +91,7 @@ export function useTheme() {
       if (!saved) applyTheme(mq.matches ? 'dark' : 'light', false)
     }
     mq.addEventListener('change', onSystem)
-    return () => {
-      removeEventListener('themechange', sync)
-      mq.removeEventListener('change', onSystem)
-    }
+    return () => mq.removeEventListener('change', onSystem)
   }, [])
 
   /** Switches theme; with a click event, the new theme spreads out in a circle from the pointer. */
