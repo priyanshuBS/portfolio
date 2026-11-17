@@ -11,7 +11,7 @@ export default function Projects() {
             <div className="group relative flex gap-5 rounded-xl p-3 transition-colors hover:bg-surface">
               <img
                 src={p.image}
-                alt=""
+                alt={`${p.name}: ${p.tagline}`}
                 loading="lazy"
                 width={1440}
                 height={900}
